@@ -4,7 +4,7 @@ export const loginEmployee = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Find the employee by email
+    // Find the employee by email (Done)
     const employee = await Employee.findOne({ email });
     if (!employee) {
       return res.status(400).json({ error: "Employee not found" });
