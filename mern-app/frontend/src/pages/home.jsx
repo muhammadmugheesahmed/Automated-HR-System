@@ -25,7 +25,7 @@ const HomePage = () => {
           </div>
           <div className="card" style={{ backgroundColor: "#6c757d" }}>
             <h2>Admin</h2>
-            <button onClick={() => handleNavigation("/admin-login")}>Sign In</button>
+            <button onClick={() => handleNavigation("/adminlogin")}>Sign In</button>
           </div>
           <div className="card" style={{ backgroundColor: "#007bff" }}>
             <h2>Employee</h2>

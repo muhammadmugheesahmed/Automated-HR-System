@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import employeeRoutes from "./routes/employeeRoutes.js";
 import errorMiddleware from "./middlewares/errorMiddleware.js";
 import candidateRoutes from "./routes/candidateRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js"
 import cors from "cors";
 import axios from "axios"; // Import axios for API requests
 dotenv.config({path:"./config/config.env"});
@@ -38,6 +39,8 @@ mongoose
 app.use("/api/employee", employeeRoutes);
 // Mount candidate routes under /api/candidates
 app.use("/api/candidates", candidateRoutes);
+// Mount admin routes under /api/admin
+app.use("/api/admin", adminRoutes);
 
 // If you're storing resume files, serve them as static assets
 import path from "path";
