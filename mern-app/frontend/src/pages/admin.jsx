@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import "./admin.css";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -39,44 +40,49 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow">
+    <div  class="admin-login-wrapper">
+      <div className='admin-login-container'>
       <h2 className="text-2xl font-bold mb-4 text-center">Admin Login</h2>
-      {error && <p className="text-red-500 text-center">{error}</p>}
+      {error && <div className="erro-messsage">
+        <p>{error}</p>
+        </div>
+        }
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            className="mt-1 block w-full border-gray-300 rounded-md p-2"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            className="mt-1 block w-full border-gray-300 rounded-md p-2"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
-          disabled={loading}
-        >
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300">
+              Email <span className="required">*</span>:
+            </label>
+            <input
+              type="email"
+              id="email"
+              className="mt-1 block w-full input-field"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300">
+              Password <span className="required">*</span>:
+            </label>
+            <input
+              type="password"
+              id="password"
+              className="mt-1 block w-full input-field"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-2 rounded-md hover:bg-blue-700"
+            disabled={loading}
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

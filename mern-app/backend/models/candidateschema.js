@@ -12,10 +12,12 @@ const candidateSchema = new mongoose.Schema(
       unique: true
     },
     qualification: {
-      type: String
+      type: String,
+      required:true
     },
     gender: {
-      type: String
+      type: String,
+      required:true
     },
     position: {
       type: String,

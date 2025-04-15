@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './employee.css';
 
 const EmployeeLogin = () => {
   const [email, setEmail] = useState('');
@@ -13,8 +14,6 @@ const EmployeeLogin = () => {
     setError(null);
     setLoading(true);
 
-    console.log("Attempting login with:", { email, password }); // Debug: log credentials
-
     try {
       const response = await fetch('http://localhost:5001/api/employee/login', {
         method: 'POST',
@@ -23,7 +22,6 @@ const EmployeeLogin = () => {
       });
 
       const data = await response.json();
-      console.log("Response from server:", data); // Debug: log server response
 
       if (response.ok) {
         navigate('/employee-home');
@@ -39,44 +37,53 @@ const EmployeeLogin = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow">
-      <h2 className="text-2xl font-bold mb-4 text-center">Employee Login</h2>
-      {error && <p className="text-red-500 text-center">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            className="mt-1 block w-full border-gray-300 rounded-md p-2"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            className="mt-1 block w-full border-gray-300 rounded-md p-2"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
-          disabled={loading}
-        >
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
+    <div className="employee-login-wrapper">
+      <div className="employee-login-container">
+        <h2 className="text-2xl font-bold mb-4 text-center text-white">Employee Login</h2>
+        
+        {/* Stylish Error Message */}
+        {error && (
+          <div className="error-message">
+            <p>{error}</p>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300">
+              Email <span className="required">*</span>:
+            </label>
+            <input
+              type="email"
+              id="email"
+              className="mt-1 block w-full input-field"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300">
+              Password <span className="required">*</span>:
+            </label>
+            <input
+              type="password"
+              id="password"
+              className="mt-1 block w-full input-field"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-2 rounded-md hover:bg-blue-700"
+            disabled={loading}
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

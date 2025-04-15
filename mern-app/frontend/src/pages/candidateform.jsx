@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './candidateform.css';
 
 const CandidateForm = () => {
   const [formData, setFormData] = useState({
@@ -22,25 +23,20 @@ const CandidateForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const data = new FormData();
-    data.append('name', formData.name);
-    data.append('email', formData.email);
-    data.append('qualification', formData.qualification);
-    data.append('gender', formData.gender);
-    data.append('position', formData.position);
-    
-    if (resume) {
-      data.append('resume', resume);
-    }
+    Object.entries(formData).forEach(([key, value]) => data.append(key, value));
+    if (resume) data.append('resume', resume);
 
     try {
-        const response = await axios.post('http://localhost:5001/api/candidates/form', data, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-          });
-          
-      setMessage('Candidate submitted successfully!');
-      // Optionally, reset the form here
+      await axios.post('http://localhost:5001/api/candidates/form', data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      setMessage('✅ Candidate submitted successfully!');
+      
+      // Alert on successful submission
+      alert('Your application has been submitted successfully!');
+      
+      // Reset form
       setFormData({
         name: '',
         email: '',
@@ -50,74 +46,45 @@ const CandidateForm = () => {
       });
       setResume(null);
     } catch (error) {
-      setMessage('Error submitting candidate: ' + (error.response?.data?.error || error.message));
+      setMessage('❌ Error: ' + (error.response?.data?.error || error.message));
+      
+      // Alert on error
+      alert('There was an error submitting your application. Please try again.');
     }
   };
 
   return (
-    <div>
-      <h2>Candidate Application Form</h2>
-      {message && <p>{message}</p>}
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <div>
-          <label>Name:</label>
-          <input 
-            type="text" 
-            name="name" 
-            value={formData.name} 
-            onChange={handleChange} 
-            required 
-          />
-        </div>
-        <div>
-          <label>Email:</label>
-          <input 
-            type="email" 
-            name="email" 
-            value={formData.email} 
-            onChange={handleChange} 
-            required 
-          />
-        </div>
-        <div>
-          <label>Qualification:</label>
-          <input 
-            type="text" 
-            name="qualification" 
-            value={formData.qualification} 
-            onChange={handleChange} 
-          />
-        </div>
-        <div>
-          <label>Gender:</label>
+    <div className="candidate-form-wrapper">
+      <div className="candidate-form-container">
+        <h2>Apply for a Position</h2>
+        {message && <p className="message">{message}</p>}
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
+          <label>Name <span className="required">*</span>:</label>
+          <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+
+          <label>Email <span className="required">*</span>:</label>
+          <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+
+          <label>Qualification:<span className="required">*</span></label>
+          <input type="text" name="qualification" value={formData.qualification} onChange={handleChange} />
+
+          <label>Gender:<span className="required">*</span></label>
           <select name="gender" value={formData.gender} onChange={handleChange}>
             <option value="">Select Gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
             <option value="Other">Other</option>
           </select>
-        </div>
-        <div>
-          <label>Position to Apply:</label>
-          <input 
-            type="text" 
-            name="position" 
-            value={formData.position} 
-            onChange={handleChange} 
-            required 
-          />
-        </div>
-        <div>
-          <label>Resume (PDF/DOC/DOCX):</label>
-          <input 
-            type="file" 
-            name="resume" 
-            onChange={handleFileChange} 
-            accept=".pdf,.doc,.docx" 
-          />
-        </div>
-        <button type="submit">Submit</button>
-      </form>
+
+          <label>Position Applied For <span className="required">*</span>:</label>
+          <input type="text" name="position" value={formData.position} onChange={handleChange} required />
+
+          <label>Upload Resume (PDF/DOC/DOCX):</label>
+          <input type="file" name="resume" onChange={handleFileChange} accept=".pdf,.doc,.docx" />
+
+          <button type="submit">Submit Application</button>
+        </form>
+      </div>
     </div>
   );
 };

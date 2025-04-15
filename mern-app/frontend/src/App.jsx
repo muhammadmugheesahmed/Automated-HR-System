@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/home";         // Your existing home page component
 import EmployeeLogin from "./pages/employee";
-import EmployeeHome from "./pages/employeeHome";
+import EmployeeHome from "./pages/employeehome";
 import Adminlogin from "./pages/admin";      // Your existing signup page component
 import CandidateForm from "./pages/candidateform";
 import { Flowbite } from "flowbite-react";

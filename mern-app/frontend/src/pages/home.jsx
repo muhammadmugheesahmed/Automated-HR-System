@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./HomePage.css";
+import "./home.css";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -10,27 +10,51 @@ const HomePage = () => {
   };
 
   return (
-    <div>
+    <div className="homepage">
       {/* Header */}
-      <header>
-        <span onClick={() => handleNavigation("/")}>AUTOMATED HR</span>
+      <header className="header">
+        <span className="logo" onClick={() => handleNavigation("/")}>
+          Automated HR
+        </span>
       </header>
 
       {/* Main Content */}
-      <div className="container">
-        <div className="grid">
-          <div className="card" style={{ backgroundColor: "#0056b3" }}>
-            <h2>Candidate Form</h2>
-            <button onClick={() => handleNavigation("/candidate-form")}>Click Here</button>
+      <div className="main-content">
+        {/* Login Section (Now on full left) */}
+        <div className="login-side">
+          <div className="login-container">
+            <div className="login-card">
+              <h3>Candidate</h3>
+              <button onClick={() => handleNavigation("/candidate-form")}>
+                Click Here
+              </button>
+            </div>
+            <div className="login-card">
+              <h3>Admin</h3>
+              <button onClick={() => handleNavigation("/adminlogin")}>
+                Sign In
+              </button>
+            </div>
+            <div className="login-card">
+              <h3>Employee</h3>
+              <button onClick={() => handleNavigation("/employee")}>
+                Sign In
+              </button>
+            </div>
           </div>
-          <div className="card" style={{ backgroundColor: "#6c757d" }}>
-            <h2>Admin</h2>
-            <button onClick={() => handleNavigation("/adminlogin")}>Sign In</button>
-          </div>
-          <div className="card" style={{ backgroundColor: "#007bff" }}>
-            <h2>Employee</h2>
-            <button onClick={() => handleNavigation("/employee")}>Sign In</button>
-          </div>
+        </div>
+
+        {/* Text Section */}
+        <div className="info-side">
+          <h1><div class="typing-container">
+  Automated Hr...
+</div>
+          </h1>
+          <p>
+            Streamline your hiring and employee management with our powerful,
+            easy-to-use HR automation platform. From candidate onboarding to
+            employee self-service, everything is just a click away.
+          </p>
         </div>
       </div>
 

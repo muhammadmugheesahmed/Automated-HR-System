@@ -1,0 +1,88 @@
+/* General Styling for the Login Page */
+.employee-login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url('https://images.unsplash.com/photo-1605902711622-cfb43c44367f');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 20px;
+  }
+  
+  .employee-login-container {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 100%;
+    color: white;
+  }
+  
+  /* Heading Style */
+  .employee-login-container h2 {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Input Fields Style */
+  .input-field {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    width: 100%; /* Ensures the input fields take full container width */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box; /* Prevents input fields from overflowing */
+  }
+  
+  .input-field:focus {
+    border-color: #00d4ff;
+    outline: none;
+  }
+  
+  /* Button Styling */
+  button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background: linear-gradient(135deg, #00d4ff, #007bff);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.4s ease, transform 0.2s ease;
+    box-sizing: border-box; /* Ensures button width is consistent */
+  }
+  
+  button:hover {
+    background: linear-gradient(135deg, #007bff, #00d4ff);
+    transform: scale(1.05);
+  }
+  
+  button:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+  }
+  
+  /* Stylish Error Message */
+  .error-message {
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+  }
+  
+  /* Neon Pink Asterisk for Required Fields */
+  .required {
+    color: #ff6ec7; /* Neon Pink color */
+    font-weight: bold;
+  }
