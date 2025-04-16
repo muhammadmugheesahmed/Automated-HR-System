@@ -161,6 +161,10 @@ body, html {
   padding: 15px 0;
   color: #aaa;
   font-size: 14px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
 }
 
 /* Responsive Design */

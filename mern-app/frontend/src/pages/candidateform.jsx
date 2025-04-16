@@ -54,6 +54,7 @@ const CandidateForm = () => {
   };
 
   return (
+    <div>
     <div className="candidate-form-wrapper">
       <div className="candidate-form-container">
         <h2>Apply for a Position</h2>
@@ -85,6 +86,10 @@ const CandidateForm = () => {
           <button type="submit">Submit Application</button>
         </form>
       </div>
+    </div>
+    <footer className="footer">
+        &copy; {new Date().getFullYear()} Automated HR. All rights reserved.
+      </footer>
     </div>
   );
 };

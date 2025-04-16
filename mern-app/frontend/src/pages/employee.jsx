@@ -37,6 +37,7 @@ const EmployeeLogin = () => {
   };
 
   return (
+    <div>
     <div className="employee-login-wrapper">
       <div className="employee-login-container">
         <h2 className="text-2xl font-bold mb-4 text-center text-white">Employee Login</h2>
@@ -83,8 +84,15 @@ const EmployeeLogin = () => {
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
+        {/* Footer */}
+      
       </div>
+      
     </div>
+    <footer className="footer">
+    &copy; {new Date().getFullYear()} Automated HR. All rights reserved.
+  </footer>
+  </div>
   );
 };
 

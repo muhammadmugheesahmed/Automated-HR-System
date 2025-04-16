@@ -2,13 +2,21 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "./admin.css";
 
+
+  
+    
+
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -40,6 +48,14 @@ const AdminLogin = () => {
   };
 
   return (
+    <div className="homepage">
+      {/* Header */}
+      <header className="header">
+        <span className="logo" onClick={() => handleNavigation("/")}>
+          Automated HR
+        </span>
+      </header>
+
     <div  class="admin-login-wrapper">
       <div className='admin-login-container'>
       <h2 className="text-2xl font-bold mb-4 text-center">Admin Login</h2>
@@ -83,6 +99,11 @@ const AdminLogin = () => {
           </button>
         </form>
       </div>
+     
+    </div>
+    <footer className="footer">
+        &copy; {new Date().getFullYear()} Automated HR. All rights reserved.
+      </footer>
     </div>
   );
 };

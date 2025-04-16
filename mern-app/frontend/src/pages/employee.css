@@ -86,3 +86,15 @@
     color: #ff6ec7; /* Neon Pink color */
     font-weight: bold;
   }
+  /* Footer */
+.footer {
+  background-color: rgba(20, 20, 40, 0.95);
+  text-align: center;
+  padding: 15px 0;
+  color: #aaa;
+  font-size: 14px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}

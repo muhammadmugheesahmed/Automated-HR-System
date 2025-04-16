@@ -84,6 +84,7 @@ function EmployeeHome() {
   }, []);
 
   return (
+    
     <div className="page-wrapper">
       <div className="chat-header">
         <h2>Employee Chatbot</h2>
@@ -139,10 +140,11 @@ function EmployeeHome() {
         )}
       </div>
 
-      <footer className="chat-footer">
-        <p>&copy; 2025 Automated HR. All rights reserved.</p>
-      </footer>
+      <footer className="footer">
+    &copy; {new Date().getFullYear()} Automated HR. All rights reserved.
+  </footer>
     </div>
+     
   );
 }
 

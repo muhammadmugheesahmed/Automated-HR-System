@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './adminhome.css'; // Assuming you want to keep styles in a separate CSS file
 
 const AdminCRUD = () => {
@@ -9,6 +10,10 @@ const AdminCRUD = () => {
 
   const API = "http://localhost:5001/api/employee";
 
+  const navigate = useNavigate();
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
   const createEmployee = async () => {
     const res = await fetch(`${API}/create`, {
       method: "POST",
@@ -47,6 +52,14 @@ const AdminCRUD = () => {
   };
 
   return (
+    
+      <div className="homepage">
+      {/* Header */}
+      <header className="header">
+        <span className="logo" onClick={() => handleNavigation("/")}>
+          Automated HR
+        </span>
+      </header>
     <div className="admin-panel">
       <div className="admin-header">
         <h2>Admin Panel (Employee CRUD)</h2>
@@ -88,6 +101,10 @@ const AdminCRUD = () => {
           </ul>
         </div>
       )}
+    </div>
+    <footer className="footer">
+        &copy; {new Date().getFullYear()} Automated HR. All rights reserved.
+      </footer>
     </div>
   );
 };
