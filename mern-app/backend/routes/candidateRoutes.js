@@ -1,18 +1,27 @@
+// backend/routes/candidateRoutes.js
+
 import express from "express";
 import multer from "multer";
 import path from "path";
-import { createCandidate } from "../controller/candidateController.js";  // ✅ Named Import
+import fs from "fs";
+import axios from "axios";
+import { createCandidate,shortlistCandidates } from "../controller/candidateController.js";  // ✅ Controller Import
 
 const router = express.Router();
+
+// Ensure 'uploads/resumes' folder exists
+const uploadPath = "uploads/resumes/";
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
 
 // Configure multer storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/resumes/");
+    cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + "-" + Date.now() + ext);
+    cb(null, file.originalname); // ✅ Save uploaded file with original name
   }
 });
 
@@ -30,9 +39,10 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({ storage: storage, fileFilter: fileFilter });
+const upload = multer({ storage, fileFilter });
 
-// ✅ Use function directly in route
-router.post("/form", upload.single("resume"), createCandidate); 
+// Route: Form Submission + Resume Upload
+router.post("/form", upload.single("resume"), createCandidate);
+router.post("/shortlist", shortlistCandidates);
 
 export default router;

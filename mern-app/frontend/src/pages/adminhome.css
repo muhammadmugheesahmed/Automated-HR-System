@@ -1,98 +1,149 @@
-/* General styles */
+/* Layout */
+.homepage {
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #1c1c1c;
+}
+
+.header {
+  background-color: #00d4ff;
+  padding: 20px;
+  text-align: center;
+  font-size: 24px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.panels-container {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+/* Panels */
 .admin-panel {
-    max-width: 600px;
-    margin: 20px auto;
-    background-color: #2c3e50;
-    padding: 20px;
-    border-radius: 10px;
-    color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  .admin-header {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .admin-header h2 {
-    font-size: 28px;
-    color: #00d4ff;
-  }
-  
-  /* Form styles */
-  .form-container {
-    margin-bottom: 30px;
-  }
-  
-  .input-field {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: 1px solid #444;
-    background-color: #34495e;
-    color: white;
-    font-size: 16px;
-    box-sizing: border-box;
-  }
-  
-  .input-field:focus {
-    outline: none;
-    border-color: #00d4ff;
-  }
-  
-  /* Buttons */
-  .buttons-container {
-    display: flex;
-    gap: 10px;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  
-  .action-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 25px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    width: 22%;
-  }
-  
-  .action-button:hover {
-    background-color: #0069d9;
-    transform: translateY(-2px);
-  }
-  
-  .action-button:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
-  }
-  
-  /* Message box */
-  .message-box {
-    background-color: #27ae60;
-    padding: 12px;
-    border-radius: 10px;
-    margin-top: 15px;
-    font-size: 16px;
-    text-align: center;
-  }
-  
-  .message-box.error {
-    background-color: #e74c3c;
-  }
-  
-  .employee-list {
-    margin-top: 20px;
-  }
-  
-  .employee-item {
-    padding: 10px;
-    background-color: #34495e;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    font-size: 16px;
-  }
+  background-color: #2c3e50;
+  width: 45%;
+  min-width: 350px;
+  padding: 20px;
+  margin: 10px 0;
+  border-radius: 10px;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.admin-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.admin-header h2 {
+  font-size: 24px;
+  color: #00d4ff;
+}
+
+/* Form Styles */
+.form-container {
+  margin-bottom: 20px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background-color: #34495e;
+  color: white;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #00d4ff;
+}
+
+.buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.action-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-button:hover {
+  background-color: #0069d9;
+  transform: translateY(-2px);
+}
+
+.action-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Tables and Lists */
+.shortlist-results, .employee-list {
+  margin-top: 20px;
+}
+
+.candidate-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.candidate-table th, .candidate-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.candidate-table th {
+  background-color: #3f51b5;
+  color: white;
+}
+
+.employee-item {
+  background-color: #34495e;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  list-style: none;
+  font-size: 16px;
+}
+
+/* Messages */
+.message-box {
+  background-color: #27ae60;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.message-box.error {
+  background-color: #e74c3c;
+}
+
+/* Footer */
+.footer {
+  margin-top: auto;
+  text-align: center;
+  padding: 10px;
+  color: white;
+  background-color: #2c3e50;
+  font-size: 14px;
+}
