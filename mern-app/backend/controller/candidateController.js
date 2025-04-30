@@ -1,6 +1,7 @@
 import Candidate from "../models/candidateschema.js";
 import { exec } from 'child_process';
 import path from 'path';
+import { cwd } from "process";
 
 
 // Your existing createCandidate function (UNCHANGED)
@@ -38,8 +39,8 @@ export const createCandidate = async (req, res) => {
     res.status(500).json({ success: false, error: "Internal Server Error" });
   }
 };
-// Shortlist Candidates Controller
-// Shortlist Candidates Controller
+
+// Shortlist Candidates Controller on Job Description
 export const shortlistCandidates = (req, res) => {
   const { jobDescription, topN } = req.body;
   const scriptPath = path.join(process.cwd(), 'score_resumes.py');
@@ -73,4 +74,48 @@ export const shortlistCandidates = (req, res) => {
         .json({ success: false, message: 'Failed to parse results!' });
     }
   });
+};
+
+
+// Shortlist Candidates Controller on Category
+export const rankResumes = async (req, res) => {
+  try {
+    const { category, topN } = req.body;
+
+    const scriptPath = path.join(process.cwd(), "rank_resumes.py"); // correct location
+    const resumeDir = path.join(process.cwd(), "uploads", "resumes");
+
+    const escapedCategory = `"${category.replace(/(["\\])/g, '\\$1')}"`; // safely quote category
+    const command = `python3 ${scriptPath} ${escapedCategory} ${topN} "${resumeDir}"`;
+   
+
+
+    console.log("Executing:", command);
+    
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error("Error executing Python script:", error.message);
+        return res.status(500).json({ error: "Ranking failed (exec error)", details: error.message });
+      }
+
+      if (stderr) {
+        console.error("Python stderr:", stderr);
+        return res.status(500).json({ error: "Python error", stderr });
+      }
+
+      try {
+
+        const result = JSON.parse(stdout);
+        res.json(result);
+
+      } catch (err) {
+        console.error("Failed to parse Python output:", stdout);
+        res.status(500).json({ error: "Invalid JSON returned by Python script", raw: stdout });
+      }
+    });
+
+  } catch (err) {
+    console.error("Node error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };

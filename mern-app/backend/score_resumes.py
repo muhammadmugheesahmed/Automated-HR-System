@@ -12,9 +12,9 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 
 # Ensure these are downloaded once
-nltk.download('stopwords', quiet=True)
-nltk.download('punkt', quiet=True)
-nltk.download('wordnet', quiet=True)
+#nltk.download('stopwords', quiet=True)
+#nltk.download('punkt', quiet=True)
+#nltk.download('wordnet', quiet=True)
 
 stemmer = PorterStemmer()
 lemmatizer = WordNetLemmatizer()

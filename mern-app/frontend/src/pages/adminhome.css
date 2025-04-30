@@ -8,7 +8,7 @@
 }
 
 .header {
-  background-color: #00d4ff;
+  background-color: #2c3e50;
   padding: 20px;
   text-align: center;
   font-size: 24px;
@@ -146,4 +146,23 @@
   color: white;
   background-color: #2c3e50;
   font-size: 14px;
+}
+.toggle-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.toggle-button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #eee;
+  cursor: pointer;
+  margin: 0 5px;
+  border-radius: 5px;
+}
+
+.toggle-button.active {
+  background-color: #007bff;
+  color: white;
 }

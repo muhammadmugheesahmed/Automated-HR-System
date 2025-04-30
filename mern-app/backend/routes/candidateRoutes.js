@@ -5,7 +5,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import axios from "axios";
-import { createCandidate,shortlistCandidates } from "../controller/candidateController.js";  // ✅ Controller Import
+import { createCandidate,shortlistCandidates,rankResumes } from "../controller/candidateController.js";  // ✅ Controller Import
 
 const router = express.Router();
 
@@ -44,5 +44,6 @@ const upload = multer({ storage, fileFilter });
 // Route: Form Submission + Resume Upload
 router.post("/form", upload.single("resume"), createCandidate);
 router.post("/shortlist", shortlistCandidates);
+router.post("/rank", rankResumes);
 
 export default router;

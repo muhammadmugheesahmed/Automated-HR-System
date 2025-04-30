@@ -4,10 +4,12 @@ import './adminhome.css'; // Unified CSS
 
 const AdminCRUD = () => {
   const [jobDescription, setJobDescription] = useState('');
+  const [category, setCategory] = useState('');
   const [topN, setTopN] = useState(5);
   const [shortlistedCandidates, setShortlistedCandidates] = useState([]);
   const [loadingShortlist, setLoadingShortlist] = useState(false);
   const [shortlistMessage, setShortlistMessage] = useState('');
+  const [mode, setMode] = useState('jd'); // 'jd' or 'category'
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,10 +21,10 @@ const AdminCRUD = () => {
   const CAPI = "http://localhost:5001/api/candidates";
   const EAPI = "http://localhost:5001/api/employee";
 
-  // Shortlisting Candidates
+  // JD-based Shortlisting
   const shortlistCandidates = async () => {
     setLoadingShortlist(true);
-    setShortlistMessage('Shortlisting candidates...');
+    setShortlistMessage('Shortlisting candidates by Job Description...');
 
     try {
       const response = await fetch(`${CAPI}/shortlist`, {
@@ -33,13 +35,39 @@ const AdminCRUD = () => {
       const data = await response.json();
       if (response.ok) {
         setShortlistedCandidates(data);
-        setShortlistMessage('Shortlisting successful!');
+        setShortlistMessage('Job Description-based Shortlisting successful!');
       } else {
-        setShortlistMessage('Shortlisting failed!');
+        setShortlistMessage('Job Description-based Shortlisting failed!');
       }
     } catch (error) {
       console.error(error);
       setShortlistMessage('An error occurred during shortlisting.');
+    } finally {
+      setLoadingShortlist(false);
+    }
+  };
+
+  // Category-based Shortlisting
+  const shortlistByCategory = async () => {
+    setLoadingShortlist(true);
+    setShortlistMessage('Shortlisting Candidates by Category...');
+
+    try {
+      const response = await fetch(`${CAPI}/rank`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category, topN }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setShortlistedCandidates(data);
+        setShortlistMessage('Category-based shortlisting successful!');
+      } else {
+        setShortlistMessage('Category-based shortlisting failed!');
+      }
+    } catch (error) {
+      console.error(error);
+      setShortlistMessage('An error occurred during category shortlisting.');
     } finally {
       setLoadingShortlist(false);
     }
@@ -92,38 +120,86 @@ const AdminCRUD = () => {
 
       {/* Panels Container */}
       <div className="panels-container">
-        
+
         {/* Shortlisting Panel */}
         <div className="admin-panel">
           <div className="admin-header">
             <h2>Shortlist Candidates</h2>
           </div>
 
-          <div className="form-container">
-            <textarea
-              placeholder="Enter Job Description here..."
-              value={jobDescription}
-              onChange={(e) => setJobDescription(e.target.value)}
-              className="input-field"
-              rows={5}
-            />
-            <input
-              type="number"
-              placeholder="Top N Candidates"
-              value={topN}
-              onChange={(e) => setTopN(parseInt(e.target.value, 10) || 1)}
-              className="input-field"
-              min={1}
-            />
+          {/* Toggle Buttons */}
+          <div className="toggle-container">
             <button
-              onClick={shortlistCandidates}
-              className="action-button"
-              disabled={loadingShortlist || !jobDescription.trim()}
+              className={`toggle-button ${mode === 'jd' ? 'active' : ''}`}
+              onClick={() => setMode('jd')}
             >
-              {loadingShortlist ? "Shortlisting..." : "Shortlist"}
+              Rank by JD
             </button>
-            {shortlistMessage && <div className="message-box">{shortlistMessage}</div>}
+            <button
+              className={`toggle-button ${mode === 'category' ? 'active' : ''}`}
+              onClick={() => setMode('category')}
+            >
+              Rank by Category
+            </button>
           </div>
+
+          {/* JD-based Shortlisting Form */}
+          {mode === 'jd' && (
+            <div className="form-container">
+              <textarea
+                placeholder="Enter Job Description here..."
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
+                className="input-field"
+                rows={5}
+              />
+              <input
+                type="number"
+                placeholder="Top N Candidates"
+                value={topN}
+                onChange={(e) => setTopN(parseInt(e.target.value, 10) || 1)}
+                className="input-field"
+                min={1}
+              />
+              <button
+                onClick={shortlistCandidates}
+                className="action-button"
+                disabled={loadingShortlist || !jobDescription.trim()}
+              >
+                {loadingShortlist ? "Shortlisting..." : "Shortlist"}
+              </button>
+              {shortlistMessage && <div className="message-box">{shortlistMessage}</div>}
+            </div>
+          )}
+
+          {/* Category-based Shortlisting Form */}
+          {mode === 'category' && (
+            <div className="form-container">
+              <input
+                type="text"
+                placeholder="Enter Category (e.g., developer)"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="input-field"
+              />
+              <input
+                type="number"
+                placeholder="Top N Candidates"
+                value={topN}
+                onChange={(e) => setTopN(parseInt(e.target.value, 10) || 1)}
+                className="input-field"
+                min={1}
+              />
+              <button
+                onClick={shortlistByCategory}
+                className="action-button"
+                disabled={loadingShortlist || !category.trim()}
+              >
+                {loadingShortlist ? "Shortlisting..." : "Rank by Category"}
+              </button>
+              {shortlistMessage && <div className="message-box">{shortlistMessage}</div>}
+            </div>
+          )}
 
           {/* Shortlisted Candidates Table */}
           {shortlistedCandidates.length > 0 && (
