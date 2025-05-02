@@ -9,7 +9,7 @@ const AdminCRUD = () => {
   const [shortlistedCandidates, setShortlistedCandidates] = useState([]);
   const [loadingShortlist, setLoadingShortlist] = useState(false);
   const [shortlistMessage, setShortlistMessage] = useState('');
-  const [mode, setMode] = useState('jd'); // 'jd' or 'category'
+  const [mode, setMode] = useState('jd');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,8 +20,8 @@ const AdminCRUD = () => {
 
   const CAPI = "http://localhost:5001/api/candidates";
   const EAPI = "http://localhost:5001/api/employee";
+  const AAPI ="http://localhost:5001/api/admin";
 
-  // JD-based Shortlisting
   const shortlistCandidates = async () => {
     setLoadingShortlist(true);
     setShortlistMessage('Shortlisting candidates by Job Description...');
@@ -47,7 +47,6 @@ const AdminCRUD = () => {
     }
   };
 
-  // Category-based Shortlisting
   const shortlistByCategory = async () => {
     setLoadingShortlist(true);
     setShortlistMessage('Shortlisting Candidates by Category...');
@@ -73,7 +72,32 @@ const AdminCRUD = () => {
     }
   };
 
-  // CRUD Operations
+  const sendInterviewEmail = async (candidateData) => {
+    try {
+      // Flatten it correctly
+    const candidate = {
+      name: candidateData.candidate_name,
+      email: candidateData.email,
+    };
+      const res = await fetch(`${AAPI}/send-interview-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({candidates: [candidate]}),
+      });
+  
+      const data = await res.json();
+      if (res.ok) {
+        alert(`Email sent to ${candidate.name}`);
+      } else {
+        alert(`Failed to send email: ${data.error}`);
+      }
+    } catch (err) {
+      console.error("Error sending email:", err);
+      alert("Something went wrong while sending the email.");
+    }
+  };
+  
+
   const createEmployee = async () => {
     const res = await fetch(`${EAPI}/create`, {
       method: "POST",
@@ -113,95 +137,39 @@ const AdminCRUD = () => {
 
   return (
     <div className="homepage">
-      {/* Header */}
       <header className="header">
         <span className="logo" onClick={() => navigate("/")}>Automated HR</span>
       </header>
 
-      {/* Panels Container */}
       <div className="panels-container">
-
-        {/* Shortlisting Panel */}
         <div className="admin-panel">
           <div className="admin-header">
             <h2>Shortlist Candidates</h2>
           </div>
 
-          {/* Toggle Buttons */}
           <div className="toggle-container">
-            <button
-              className={`toggle-button ${mode === 'jd' ? 'active' : ''}`}
-              onClick={() => setMode('jd')}
-            >
-              Rank by JD
-            </button>
-            <button
-              className={`toggle-button ${mode === 'category' ? 'active' : ''}`}
-              onClick={() => setMode('category')}
-            >
-              Rank by Category
-            </button>
+            <button className={`toggle-button ${mode === 'jd' ? 'active' : ''}`} onClick={() => setMode('jd')}>Rank by JD</button>
+            <button className={`toggle-button ${mode === 'category' ? 'active' : ''}`} onClick={() => setMode('category')}>Rank by Category</button>
           </div>
 
-          {/* JD-based Shortlisting Form */}
           {mode === 'jd' && (
             <div className="form-container">
-              <textarea
-                placeholder="Enter Job Description here..."
-                value={jobDescription}
-                onChange={(e) => setJobDescription(e.target.value)}
-                className="input-field"
-                rows={5}
-              />
-              <input
-                type="number"
-                placeholder="Top N Candidates"
-                value={topN}
-                onChange={(e) => setTopN(parseInt(e.target.value, 10) || 1)}
-                className="input-field"
-                min={1}
-              />
-              <button
-                onClick={shortlistCandidates}
-                className="action-button"
-                disabled={loadingShortlist || !jobDescription.trim()}
-              >
-                {loadingShortlist ? "Shortlisting..." : "Shortlist"}
-              </button>
+              <textarea placeholder="Enter Job Description here..." value={jobDescription} onChange={(e) => setJobDescription(e.target.value)} className="input-field" rows={5} />
+              <input type="number" placeholder="Top N Candidates" value={topN} onChange={(e) => setTopN(parseInt(e.target.value, 10) || 1)} className="input-field" min={1} />
+              <button onClick={shortlistCandidates} className="action-button" disabled={loadingShortlist || !jobDescription.trim()}>{loadingShortlist ? "Shortlisting..." : "Shortlist"}</button>
               {shortlistMessage && <div className="message-box">{shortlistMessage}</div>}
             </div>
           )}
 
-          {/* Category-based Shortlisting Form */}
           {mode === 'category' && (
             <div className="form-container">
-              <input
-                type="text"
-                placeholder="Enter Category (e.g., developer)"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="input-field"
-              />
-              <input
-                type="number"
-                placeholder="Top N Candidates"
-                value={topN}
-                onChange={(e) => setTopN(parseInt(e.target.value, 10) || 1)}
-                className="input-field"
-                min={1}
-              />
-              <button
-                onClick={shortlistByCategory}
-                className="action-button"
-                disabled={loadingShortlist || !category.trim()}
-              >
-                {loadingShortlist ? "Shortlisting..." : "Rank by Category"}
-              </button>
+              <input type="text" placeholder="Enter Category (e.g., developer)" value={category} onChange={(e) => setCategory(e.target.value)} className="input-field" />
+              <input type="number" placeholder="Top N Candidates" value={topN} onChange={(e) => setTopN(parseInt(e.target.value, 10) || 1)} className="input-field" min={1} />
+              <button onClick={shortlistByCategory} className="action-button" disabled={loadingShortlist || !category.trim()}>{loadingShortlist ? "Shortlisting..." : "Rank by Category"}</button>
               {shortlistMessage && <div className="message-box">{shortlistMessage}</div>}
             </div>
           )}
 
-          {/* Shortlisted Candidates Table */}
           {shortlistedCandidates.length > 0 && (
             <div className="shortlist-results">
               <h3>Shortlisted Candidates:</h3>
@@ -209,16 +177,22 @@ const AdminCRUD = () => {
                 <thead>
                   <tr>
                     <th>Candidate Name</th>
+                    <th>Email</th>
                     <th>Filename</th>
                     <th>Score</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {shortlistedCandidates.map((cand, index) => (
                     <tr key={index}>
                       <td>{cand.candidate_name}</td>
+                      <td>{cand.email}</td>
                       <td>{cand.filename}</td>
                       <td>{cand.score.toFixed(2)}%</td>
+                      <td>
+                        <button className="action-button" onClick={() => sendInterviewEmail(cand)}>Email Interview</button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -227,27 +201,14 @@ const AdminCRUD = () => {
           )}
         </div>
 
-        {/* CRUD Panel */}
         <div className="admin-panel">
           <div className="admin-header">
             <h2>Manage Employees</h2>
           </div>
 
           <div className="form-container">
-            <input
-              type="email"
-              placeholder="Employee Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input-field"
-            />
-            <input
-              type="password"
-              placeholder="Password (for Create/Update)"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input-field"
-            />
+            <input type="email" placeholder="Employee Email" value={email} onChange={(e) => setEmail(e.target.value)} className="input-field" />
+            <input type="password" placeholder="Password (for Create/Update)" value={password} onChange={(e) => setPassword(e.target.value)} className="input-field" />
 
             <div className="buttons-container">
               <button onClick={createEmployee} className="action-button">Create</button>
@@ -258,7 +219,6 @@ const AdminCRUD = () => {
             {crudMessage && <div className="message-box">{crudMessage}</div>}
           </div>
 
-          {/* Employees List */}
           {employees.length > 0 && (
             <div className="employee-list">
               <h3>Employee List:</h3>
@@ -270,10 +230,8 @@ const AdminCRUD = () => {
             </div>
           )}
         </div>
-
       </div>
 
-      {/* Footer */}
       <footer className="footer">
         &copy; {new Date().getFullYear()} Automated HR. All rights reserved.
       </footer>

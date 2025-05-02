@@ -10,6 +10,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
+from pymongo import MongoClient 
 
 # Ensure these are downloaded once
 #nltk.download('stopwords', quiet=True)
@@ -19,6 +20,12 @@ from nltk.stem import PorterStemmer, WordNetLemmatizer
 stemmer = PorterStemmer()
 lemmatizer = WordNetLemmatizer()
 stop_words = set(stopwords.words('english'))
+
+# MongoDB setup
+client = MongoClient('mongodb+srv://mugheesahmad39:12345678MU@cluster0.3d2ak.mongodb.net/mern-app-db?retryWrites=true&w=majority&appName=Cluster0')  # Replace with your MongoDB URI
+db = client['mern-app-db']  # Replace with your database name
+collection = db['candidates']  # Replace with your collection name
+
 
 def clean_tokens(text):
     text = re.sub(r'[^a-z\s]', '', text.lower())
@@ -34,6 +41,10 @@ def extract_name_from_filename(fn):
     name = re.sub(r'[_\-]+', ' ', base)
     return name.title()
 
+# Function to get the candidate's email from MongoDB based on filename
+def get_email_by_filename(filename):
+    candidate = collection.find_one({"resume": filename})
+    return candidate.get("email") if candidate else "Not found"
 def main():
     # Read args (or fall back)
     job_desc   = sys.argv[1] 
@@ -66,11 +77,13 @@ def main():
     for i in idxs:
         fn    = files[i]
         name  = extract_name_from_filename(fn)
+        email=get_email_by_filename(fn)
         score = float(scores[i])
         out.append({
             'filename':        fn,
             'candidate_name':  name,
-            'score':           score
+            'email' : email,
+            'score':   score
         })
 
     print(json.dumps(out))
