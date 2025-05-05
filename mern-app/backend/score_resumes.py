@@ -45,6 +45,11 @@ def extract_name_from_filename(fn):
 def get_email_by_filename(filename):
     candidate = collection.find_one({"resume": filename})
     return candidate.get("email") if candidate else "Not found"
+
+def get_name_by_filename(filename):
+    candidate = collection.find_one({"resume": filename})
+    return candidate.get("name") if candidate else "Not found"
+
 def main():
     # Read args (or fall back)
     job_desc   = sys.argv[1] 
@@ -76,7 +81,7 @@ def main():
     out  = []
     for i in idxs:
         fn    = files[i]
-        name  = extract_name_from_filename(fn)
+        name  = get_name_by_filename(fn)
         email=get_email_by_filename(fn)
         score = float(scores[i])
         out.append({

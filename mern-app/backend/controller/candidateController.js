@@ -1,5 +1,6 @@
+#!/home/aetisam/miniconda3/bin/python3
 import Candidate from "../models/candidateschema.js";
-import { exec } from 'child_process';
+import { exec,spawn } from 'child_process';
 import path from 'path';
 import { cwd } from "process";
 
@@ -76,46 +77,80 @@ export const shortlistCandidates = (req, res) => {
   });
 };
 
+export const rankResumes = (req, res) => {
+  const { category, topN } = req.body;
+  const scriptPath = path.join(process.cwd(), 'rank_resumes.py');
+  const resumeDir="./uploads/resumes"
+
+  // Escape any double-quotes in the job description
+  const escapedcat = category.replace(/"/g, '\\"');
+  const n         = parseInt(topN, 10) || 1;
+
+  
+  const cmd = `python3 ${scriptPath} "${escapedcat}" ${n} ${resumeDir}`;
+
+
+  console.log("Executing:", cmd);
+    
+  exec(cmd, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error running Python script: ${error.message}`);
+      return res
+        .status(500)
+        .json({ success: false, message: 'Shortlisting failed!' });
+    }
+    if (stderr) {
+      console.error(`Python stderr: ${stderr}`);
+      return res
+        .status(500)
+        .json({ success: false, message: 'Shortlisting failed!' });
+    }
+    try {
+      const candidates = JSON.parse(stdout);
+      return res.status(200).json(candidates);
+    } catch (parseError) {
+      console.error(`Error parsing Python output: ${parseError.message}`);
+      return res
+        .status(500)
+        .json({ success: false, message: 'Failed to parse results!' });
+    }
+  });
+};
 
 // Shortlist Candidates Controller on Category
-export const rankResumes = async (req, res) => {
-  try {
-    const { category, topN } = req.body;
 
-    const scriptPath = path.join(process.cwd(), "rank_resumes.py"); // correct location
-    const resumeDir = path.join(process.cwd(), "uploads", "resumes");
+/*export const rankResumes = async (req, res) => {
+  const { category, topN } = req.body;
 
-    const escapedCategory = `"${category.replace(/(["\\])/g, '\\$1')}"`; // safely quote category
-    const command = `python3 ${scriptPath} ${escapedCategory} ${topN} "${resumeDir}"`;
-   
+  // Use the same name you run in shell:
+  // either "rank_resumes.py" or "rank_resumes"
+  
+  const resumeDir  = "./uploads/resumes";
+  const backendDir = path.resolve("backend");
 
+  // Build the exact command you type in terminal
+  const cmd = `python3 rank_resumes.py ${category} ${topN} ${resumeDir}`;
+  console.log("Executing in backend/:", cmd);
 
-    console.log("Executing:", command);
-    
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.error("Error executing Python script:", error.message);
-        return res.status(500).json({ error: "Ranking failed (exec error)", details: error.message });
-      }
+  exec(cmd, {
+    cwd: backendDir,   // run from backend folder
+    shell: true,       // let bash/zsh/etc. resolve python3
+    env: process.env   // inherit your login PATH
+  }, (err, stdout, stderr) => {
+    if (err) {
+      console.error("Execution failed:", err);
+      return res.status(500).json({ error: err.message });
+    }
 
-      if (stderr) {
-        console.error("Python stderr:", stderr);
-        return res.status(500).json({ error: "Python error", stderr });
-      }
+    // log non-fatal warnings
+    if (stderr) console.warn("Python warnings:", stderr.trim());
 
-      try {
-
-        const result = JSON.parse(stdout);
-        res.json(result);
-
-      } catch (err) {
-        console.error("Failed to parse Python output:", stdout);
-        res.status(500).json({ error: "Invalid JSON returned by Python script", raw: stdout });
-      }
-    });
-
-  } catch (err) {
-    console.error("Node error:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
+    try {
+      const data = JSON.parse(stdout);
+      return res.json(data);
+    } catch (parseErr) {
+      console.error("JSON parse failed:", stdout);
+      return res.status(500).json({ error: "Bad JSON", raw: stdout });
+    }
+  });
+};*/

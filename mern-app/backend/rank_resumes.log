@@ -1,0 +1,21 @@
+2025-05-05 20:07:40,275 WARNING: Failed to extract PDF ./uploads/resumes/mughees.pdf: No /Root object! - Is this really a PDF?
+2025-05-05 20:07:40,275 INFO: Skipped mughees.pdf: no text extracted.
+2025-05-05 20:07:40,315 WARNING: Failed to extract DOC ./uploads/resumes/owaim.doc: The command `antiword ./uploads/resumes/owaim.doc` failed with exit code 1
+------------- stdout -------------
+b''------------- stderr -------------
+b'./uploads/resumes/owaim.doc is not a Word Document. It seems to be a ZIP file, so is probably an OpenDocument file, or a "docx" file from MS Word 2007 or newer (antiword only handles binary format documents from MS Word 2003 and earlier)\n'
+2025-05-05 20:07:40,315 INFO: Skipped owaim.doc: no text extracted.
+2025-05-05 20:08:00,026 WARNING: Failed to extract PDF ./uploads/resumes/mughees.pdf: No /Root object! - Is this really a PDF?
+2025-05-05 20:08:00,026 INFO: Skipped mughees.pdf: no text extracted.
+2025-05-05 20:08:00,038 WARNING: Failed to extract DOC ./uploads/resumes/owaim.doc: The command `antiword ./uploads/resumes/owaim.doc` failed with exit code 1
+------------- stdout -------------
+b''------------- stderr -------------
+b'./uploads/resumes/owaim.doc is not a Word Document. It seems to be a ZIP file, so is probably an OpenDocument file, or a "docx" file from MS Word 2007 or newer (antiword only handles binary format documents from MS Word 2003 and earlier)\n'
+2025-05-05 20:08:00,039 INFO: Skipped owaim.doc: no text extracted.
+2025-05-05 20:14:54,279 WARNING: Failed to extract PDF ./uploads/resumes/mughees.pdf: No /Root object! - Is this really a PDF?
+2025-05-05 20:14:54,280 INFO: Skipped mughees.pdf: no text extracted.
+2025-05-05 20:14:54,322 WARNING: Failed to extract DOC ./uploads/resumes/owaim.doc: The command `antiword ./uploads/resumes/owaim.doc` failed with exit code 1
+------------- stdout -------------
+b''------------- stderr -------------
+b'./uploads/resumes/owaim.doc is not a Word Document. It seems to be a ZIP file, so is probably an OpenDocument file, or a "docx" file from MS Word 2007 or newer (antiword only handles binary format documents from MS Word 2003 and earlier)\n'
+2025-05-05 20:14:54,322 INFO: Skipped owaim.doc: no text extracted.
