@@ -80,8 +80,8 @@ const CandidateForm = () => {
           <label>Position Applied For <span className="required">*</span>:</label>
           <input type="text" name="position" value={formData.position} onChange={handleChange} required />
 
-          <label>Upload Resume (PDF/DOC/DOCX):</label>
-          <input type="file" name="resume" onChange={handleFileChange} accept=".pdf,.doc,.docx" />
+          <label>Upload Resume (DOCX):</label>
+          <input type="file" name="resume" onChange={handleFileChange} accept=".docx" />
 
           <button type="submit">Submit Application</button>
         </form>

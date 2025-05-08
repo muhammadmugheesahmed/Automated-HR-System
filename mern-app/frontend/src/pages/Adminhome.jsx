@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState , useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './adminhome.css'; // Unified CSS
+import './adminhome.css';
+
+
+
 
 const AdminCRUD = () => {
   const [jobDescription, setJobDescription] = useState('');
@@ -15,17 +18,25 @@ const AdminCRUD = () => {
   const [password, setPassword] = useState('');
   const [employees, setEmployees] = useState([]);
   const [crudMessage, setCrudMessage] = useState('');
+  const [showEmployeePopup, setShowEmployeePopup] = useState(false);
+  const [showAdminMenu, setShowAdminMenu] = useState(false);
 
   const navigate = useNavigate();
 
   const CAPI = "http://localhost:5001/api/candidates";
   const EAPI = "http://localhost:5001/api/employee";
-  const AAPI ="http://localhost:5001/api/admin";
+  const AAPI = "http://localhost:5001/api/admin";
+
+ // Reset shortlisted candidates and message when switching modes
+ const handleModeChange = (newMode) => {
+  setMode(newMode);
+  setShortlistedCandidates([]); // Clear shortlisted candidates
+  setShortlistMessage(''); // Clear message
+ };
 
   const shortlistCandidates = async () => {
     setLoadingShortlist(true);
     setShortlistMessage('Shortlisting candidates by Job Description...');
-
     try {
       const response = await fetch(`${CAPI}/shortlist`, {
         method: 'POST',
@@ -50,7 +61,6 @@ const AdminCRUD = () => {
   const shortlistByCategory = async () => {
     setLoadingShortlist(true);
     setShortlistMessage('Shortlisting Candidates by Category...');
-
     try {
       const response = await fetch(`${CAPI}/rank`, {
         method: 'POST',
@@ -74,17 +84,16 @@ const AdminCRUD = () => {
 
   const sendInterviewEmail = async (candidateData) => {
     try {
-      // Flatten it correctly
-    const candidate = {
-      name: candidateData.candidate_name,
-      email: candidateData.email,
-    };
+      const candidate = {
+        name: candidateData.candidate_name,
+        email: candidateData.email,
+      };
       const res = await fetch(`${AAPI}/send-interview-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({candidates: [candidate]}),
+        body: JSON.stringify({ candidates: [candidate] }),
       });
-  
+
       const data = await res.json();
       if (res.ok) {
         alert(`Email sent to ${candidate.name}`);
@@ -96,7 +105,6 @@ const AdminCRUD = () => {
       alert("Something went wrong while sending the email.");
     }
   };
-  
 
   const createEmployee = async () => {
     const res = await fetch(`${EAPI}/create`, {
@@ -135,28 +143,63 @@ const AdminCRUD = () => {
     setCrudMessage(data.message || data.error);
   };
 
+  const logout = () => {
+    navigate('/');
+  };
+
+  const adminMenuRef = useRef(null); // Ref for the dropdown menu
+
+   // Close the dropdown menu if clicking outside
+   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (adminMenuRef.current && !adminMenuRef.current.contains(event.target)) {
+        setShowAdminMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   return (
     <div className="homepage">
       <header className="header">
         <span className="logo" onClick={() => navigate("/")}>Automated HR</span>
       </header>
+      
 
-      <div className="panels-container">
+      
+  
+      <div className="admin-actions">
+          <button className="action-button" onClick={() => setShowAdminMenu(prev => !prev)}>Admin Actions ▾</button>
+          {showAdminMenu && (
+            <div className="dropdown-menu" ref={adminMenuRef}>
+              <button onClick={() => { setShowEmployeePopup(true); setShowAdminMenu(false); }}> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="#d8a353">
+    <path d="M14.133 8c0-.328-.033-.647-.083-.961L16 5.333l-1.656-2.719-2.325.759a6.125 6.125 0 0 0-1.903-1.125L9.6 0H6.4l-.516 2.249a6.109 6.109 0 0 0-1.903 1.126l-2.325-.76L0 5.333l1.949 1.706c-.049.314-.082.633-.082.961s.033.647.082.961L0 10.667l1.657 2.719 2.324-.759a6.1 6.1 0 0 0 1.904 1.125L6.4 16h3.2l.515-2.249a6.083 6.083 0 0 0 1.903-1.125l2.324.759L16 10.667l-1.95-1.705c.05-.315.083-.634.083-.962zM8 10a2 2 0 1 1 .001-4.001A2 2 0 0 1 8 10z" />
+  </svg>  Manage Employees</button>
+              <button onClick={logout}>🚪 Logout</button>
+            </div>
+          )}
+        </div>
+
+      <div className="shortlist-panel-wrapper">
+      
         <div className="admin-panel">
           <div className="admin-header">
             <h2>Shortlist Candidates</h2>
           </div>
-
+          
           <div className="toggle-container">
-            <button className={`toggle-button ${mode === 'jd' ? 'active' : ''}`} onClick={() => setMode('jd')}>Rank by JD</button>
-            <button className={`toggle-button ${mode === 'category' ? 'active' : ''}`} onClick={() => setMode('category')}>Rank by Category</button>
+            <button className={`toggle-button ${mode === 'jd' ? 'active' : ''}`} onClick={() => handleModeChange('jd')}>Rank by Job Description</button>
+            <button className={`toggle-button ${mode === 'category' ? 'active' : ''}`} onClick={() => handleModeChange('category')}>Rank by Category</button>
           </div>
 
           {mode === 'jd' && (
             <div className="form-container">
               <textarea placeholder="Enter Job Description here..." value={jobDescription} onChange={(e) => setJobDescription(e.target.value)} className="input-field" rows={5} />
               <input type="number" placeholder="Top N Candidates" value={topN} onChange={(e) => setTopN(parseInt(e.target.value, 10) || 1)} className="input-field" min={1} />
-              <button onClick={shortlistCandidates} className="action-button" disabled={loadingShortlist || !jobDescription.trim()}>{loadingShortlist ? "Shortlisting..." : "Shortlist"}</button>
+              <button onClick={shortlistCandidates} className="action-button" disabled={loadingShortlist || !jobDescription.trim()}>{loadingShortlist ? "Shortlisting..." : "Shortlist by Job Description"}</button>
               {shortlistMessage && <div className="message-box">{shortlistMessage}</div>}
             </div>
           )}
@@ -165,7 +208,7 @@ const AdminCRUD = () => {
             <div className="form-container">
               <input type="text" placeholder="Enter Category (e.g., developer)" value={category} onChange={(e) => setCategory(e.target.value)} className="input-field" />
               <input type="number" placeholder="Top N Candidates" value={topN} onChange={(e) => setTopN(parseInt(e.target.value, 10) || 1)} className="input-field" min={1} />
-              <button onClick={shortlistByCategory} className="action-button" disabled={loadingShortlist || !category.trim()}>{loadingShortlist ? "Shortlisting..." : "Rank by Category"}</button>
+              <button onClick={shortlistByCategory} className="action-button" disabled={loadingShortlist || !category.trim()}>{loadingShortlist ? "Shortlisting..." : "Shortlist by Category"}</button>
               {shortlistMessage && <div className="message-box">{shortlistMessage}</div>}
             </div>
           )}
@@ -191,7 +234,7 @@ const AdminCRUD = () => {
                       <td>{cand.filename}</td>
                       <td>{cand.score.toFixed(2)}%</td>
                       <td>
-                        <button className="action-button" onClick={() => sendInterviewEmail(cand)}>Email Interview</button>
+                        <button className="action-button" onClick={() => sendInterviewEmail(cand)}>Send Email</button>
                       </td>
                     </tr>
                   ))}
@@ -200,37 +243,43 @@ const AdminCRUD = () => {
             </div>
           )}
         </div>
-
-        <div className="admin-panel">
-          <div className="admin-header">
-            <h2>Manage Employees</h2>
-          </div>
-
-          <div className="form-container">
-            <input type="email" placeholder="Employee Email" value={email} onChange={(e) => setEmail(e.target.value)} className="input-field" />
-            <input type="password" placeholder="Password (for Create/Update)" value={password} onChange={(e) => setPassword(e.target.value)} className="input-field" />
-
-            <div className="buttons-container">
-              <button onClick={createEmployee} className="action-button">Create</button>
-              <button onClick={getAllEmployees} className="action-button">Read All</button>
-              <button onClick={updatePassword} className="action-button">Update</button>
-              <button onClick={deleteEmployee} className="action-button">Delete</button>
-            </div>
-            {crudMessage && <div className="message-box">{crudMessage}</div>}
-          </div>
-
-          {employees.length > 0 && (
-            <div className="employee-list">
-              <h3>Employee List:</h3>
-              <ul>
-                {employees.map((emp) => (
-                  <li key={emp._id} className="employee-item">{emp.email}</li>
-                ))}
-              </ul>
-            </div>
-          )}
         </div>
-      </div>
+        {/* Popup Modal for Manage Employees */}
+        {showEmployeePopup && (
+          <div className="popup-overlay">
+            <div className="popup-content">
+              <button className="close-button" onClick={() => setShowEmployeePopup(false)}>×</button>
+              <div className="admin-header">
+                <h2>Manage Employees</h2>
+              </div>
+
+              <div className="form-container">
+                <input type="email" placeholder="Employee Email" value={email} onChange={(e) => setEmail(e.target.value)} className="input-field" />
+                <input type="password" placeholder="Password (for Create/Update)" value={password} onChange={(e) => setPassword(e.target.value)} className="input-field" />
+
+                <div className="buttons-container">
+                  <button onClick={createEmployee} className="action-button">Create</button>
+                  <button onClick={getAllEmployees} className="action-button">Read All</button>
+                  <button onClick={updatePassword} className="action-button">Update</button>
+                  <button onClick={deleteEmployee} className="action-button">Delete</button>
+                </div>
+                {crudMessage && <div className="message-box">{crudMessage}</div>}
+              </div>
+
+              {employees.length > 0 && (
+                <div className="employee-list">
+                  <h3 color='white'>Employee List:</h3>
+                  <ul>
+                    {employees.map((emp) => (
+                      <li key={emp._id} className="employee-item">{emp.email}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      
 
       <footer className="footer">
         &copy; {new Date().getFullYear()} Automated HR. All rights reserved.

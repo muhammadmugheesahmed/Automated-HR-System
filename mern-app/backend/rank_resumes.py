@@ -1,4 +1,4 @@
-# ml/rank_resumes.py
+# ml/rank_resumes.py  category shortlisting
 import sys
 import os
 import joblib

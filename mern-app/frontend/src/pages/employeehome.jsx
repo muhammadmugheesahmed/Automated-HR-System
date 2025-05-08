@@ -3,6 +3,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./employeehome.css";
 
+
+
+
 function EmployeeHome() {
   const [query, setQuery] = useState("");
   const [messages, setMessages] = useState([]);

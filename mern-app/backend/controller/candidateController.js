@@ -51,6 +51,7 @@ export const shortlistCandidates = (req, res) => {
   const n         = parseInt(topN, 10) || 1;
 
   const cmd = `python3 ${scriptPath} "${escapedJD}" ${n}`;
+  console.log("Executing --> ",cmd);
 
   exec(cmd, (error, stdout, stderr) => {
     if (error) {
@@ -77,6 +78,8 @@ export const shortlistCandidates = (req, res) => {
   });
 };
 
+
+// Shortlist Candidates Controller on Category
 export const rankResumes = (req, res) => {
   const { category, topN } = req.body;
   const scriptPath = path.join(process.cwd(), 'rank_resumes.py');
@@ -90,7 +93,7 @@ export const rankResumes = (req, res) => {
   const cmd = `python3 ${scriptPath} "${escapedcat}" ${n} ${resumeDir}`;
 
 
-  console.log("Executing:", cmd);
+  console.log("Executing --> ", cmd);
     
   exec(cmd, (error, stdout, stderr) => {
     if (error) {
