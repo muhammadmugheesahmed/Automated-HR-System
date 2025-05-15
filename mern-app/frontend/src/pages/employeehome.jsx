@@ -123,7 +123,7 @@ function EmployeeHome() {
         <textarea
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Type your message..."
+          placeholder="Type your message or 'exit' to end chat..."
           className="chat-input"
           disabled={chatEnded}
           onKeyDown={handleKeyPress}
