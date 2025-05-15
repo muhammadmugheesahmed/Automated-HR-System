@@ -18,7 +18,9 @@ const CandidateForm = () => {
   };
 
   const handleFileChange = (e) => {
-    setResume(e.target.files[0]);
+    if (e.target.files && e.target.files[0]) {
+      setResume(e.target.files[0]);
+    }
   };
 
   const handleSubmit = async (e) => {
