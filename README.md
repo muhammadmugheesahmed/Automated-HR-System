@@ -49,7 +49,7 @@ Make sure you have the following software installed on your system:
 
 1.  **Clone the repository:**
     ```sh
-    git clone <https://github.com/your-username/Automated-HR-System.git>
+    git clone <https://github.com/muhammadmugheesahmed/Automated-HR-System.git>
     cd Automated-HR-System
     ```
 
