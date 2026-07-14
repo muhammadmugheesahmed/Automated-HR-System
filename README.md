@@ -122,3 +122,66 @@ Make sure you have the following software installed on your system:
     python chatbot_api.py  # Or your main Python script
     ```
     Your Flask chatbot server will be running, typically on `http://localhost:5001`.
+
+ ## 🏗️ System Architecture Spotlight
+
+**Automated HR & Resume Screening System**
+*A role-based architectural overview of my intelligent recruitment platform, detailing how Candidates, Employees, and Admins interact with the React frontend, FastAPI backend, and core AI models.*
+
+```mermaid
+graph TD
+    %% User Roles
+    Cand[Candidate]
+    Emp[Employee]
+    Adm[HR Admin]
+
+    subgraph Client [Frontend Interface - ReactJS]
+        C_UI(Application Form)
+        E_UI(Employee Portal)
+        A_UI(Admin Dashboard)
+    end
+
+    subgraph API [Backend Services - FastAPI]
+        Auth(Login & Auth)
+        Upload(Resume Upload API)
+        Emp_API(Employee CRUD API)
+        Chat(Chatbot Endpoint)
+        Rank(Shortlisting API)
+    end
+
+    subgraph Core [AI & Machine Learning Engine]
+        NLP[Text Extraction & NLP Processing]
+        XG[XGBoost Ranking Model]
+        LLM[LLM Chatbot Engine]
+    end
+
+    %% 1. Candidate Flow
+    Cand -->|Fills Form & Uploads PDF| C_UI
+    C_UI --> Upload
+    Upload --> NLP
+
+    %% 2. Employee Flow
+    Emp -->|Logs In| Auth
+    Auth -->|Grants Access| E_UI
+    E_UI -->|Asks HR Queries| Chat
+    Chat --> LLM
+    LLM -->|Answers Queries| E_UI
+
+    %% 3. Admin Flow
+    Adm -->|Logs In| Auth
+    Auth -->|Grants Access| A_UI
+    A_UI -->|Manages Staff| Emp_API
+    A_UI -->|Inputs Job Role & Top 'N' Count| Rank
+    Rank -->|Triggers Model| XG
+    NLP -->|Extracted Features| XG
+    XG -->|Returns Top Ranked Resumes| A_UI
+
+    %% Styling for clarity
+    style Cand fill:#10b981,stroke:#047857,stroke-width:2px,color:#ffffff
+    style Emp fill:#10b981,stroke:#047857,stroke-width:2px,color:#ffffff
+    style Adm fill:#10b981,stroke:#047857,stroke-width:2px,color:#ffffff
+    
+    style XG fill:#3b82f6,stroke:#1d4ed8,stroke-width:2px,color:#ffffff
+    style NLP fill:#3b82f6,stroke:#1d4ed8,stroke-width:2px,color:#ffffff
+    style LLM fill:#8b5cf6,stroke:#6d28d9,stroke-width:2px,color:#ffffff
+```
